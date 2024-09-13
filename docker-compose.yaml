@@ -1,4 +1,5 @@
 services:
+  # Traefik as revers- proxy, tls provider and loadbalancer
   traefik:
     image: traefik:v3.0
     ports:
@@ -38,6 +39,7 @@ services:
       - traefik.http.routers.mydashboard.middlewares=myauth
       - traefik.http.middlewares.myauth.basicauth.usersfile=/basicauth/usersfile
 
+  # Example container
   whoami:
     image: traefik/whoami:v1.8
     networks:
@@ -51,6 +53,25 @@ services:
       - traefik.http.middlewares.mywwwredirect.redirectregex.regex=^https://www\.(.*)
       - traefik.http.middlewares.mywwwredirect.redirectregex.replacement=https://$${1}
       - traefik.http.routers.mywhoami.middlewares=mywwwredirect
+
+  # Host Obsidian markdown files
+  quartz:
+    build:
+      context: ./quartz/quartz_repo
+    networks:
+      - proxy
+    environment:
+      - HOST_DOMAIN=${HOST_DOMAIN}
+    volumes:
+      - ./quartz/quartz_content:/usr/src/app/content
+      - type: bind
+        source: ./quartz/quartz.config.ts
+        target: /usr/src/app/quartz.config.ts
+    labels:
+      # Setup routing to this service
+      - traefik.enable=true
+      - traefik.http.routers.myquartz.rule=Host(`quartz.${HOST_DOMAIN}`)
+      - traefik.http.services.myquartz.loadbalancer.server.port=8080
 
 networks:
   proxy:
