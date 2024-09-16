@@ -73,6 +73,20 @@ services:
       - traefik.http.routers.myquartz.rule=Host(`quartz.${HOST_DOMAIN}`)
       - traefik.http.services.myquartz.loadbalancer.server.port=8080
 
+  # Service to update files hosted by quartz
+  quartz_updater:
+    build:
+      context: ./quartz_updater
+    networks:
+      - proxy
+    volumes:
+      - ./quartz/quartz_content:/app/dist/content
+    labels:
+      # Setup routing to this service
+      - traefik.enable=true
+      - traefik.http.routers.myquartz_updater.rule=Host(`api.${HOST_DOMAIN}`) && PathPrefix(`/quartz_updater`)
+      - traefik.http.services.myquartz_updater.loadbalancer.server.port=3000
+
 networks:
   proxy:
     name: proxy

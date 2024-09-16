@@ -1,3 +1,6 @@
 [submodule "quartz/quartz_repo"]
 	path = quartz/quartz_repo
 	url = https://github.com/jackyzha0/quartz.git
+[submodule "quartz_updater"]
+	path = quartz_updater
+	url = https://github.com/Dabemuc/quartz_updater
