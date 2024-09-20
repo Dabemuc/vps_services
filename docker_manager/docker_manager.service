@@ -1,0 +1,15 @@
+[Unit]
+Description=Docker Manager Flask Service
+After=docker.service
+Requires=docker.service
+
+[Service]
+User=daniel
+Group=docker
+WorkingDirectory=/home/daniel/vps_services/docker_manager
+ExecStart=/home/daniel/vps_services/docker_manager/venv/bin/python /home/daniel/vps_services/docker_manager/docker_manager.py
+Restart=always
+Environment="FLASK_ENV=production"
+
+[Install]
+WantedBy=multi-user.target

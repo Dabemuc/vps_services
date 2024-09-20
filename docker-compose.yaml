@@ -79,7 +79,10 @@ services:
       context: ./quartz_updater
     networks:
       - proxy
+    environment:
+      - QUARTZ_SERIVCE_NAME=quartz
     volumes:
+      # Mount content dir
       - ./quartz/quartz_content:/app/dist/content
     labels:
       # Setup routing to this service

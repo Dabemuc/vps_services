@@ -4,6 +4,17 @@ TODO
 # Services
 TODO
 
+## Docker Manager
+### About 
+This is a simple service to provide endpoints for managing the host docker instance.
+
+### Enable
+```bash
+cd docker_manager
+chmod +x setup.sh
+sudo ./setup.sh
+```
+
 # Setup
 
 ## Prerequisits
