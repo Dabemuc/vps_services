@@ -109,6 +109,8 @@ services:
 
   wordpress-db:
     image: mysql
+    networks:
+      - proxy
     environment:
       MYSQL_DATABASE: exampledb
       MYSQL_USER: exampleuser
