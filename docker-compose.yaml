@@ -1,5 +1,5 @@
 services:
-  # Traefik as revers- proxy, tls provider and loadbalancer
+  # Traefik as revers-proxy, tls provider and loadbalancer
   traefik:
     image: traefik:v3.0
     ports:
@@ -8,8 +8,8 @@ services:
     networks:
       - proxy
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock  # So that Traefik can react to docker events
-      - letsencrypt:/letsencrypt  # Volume to store TLS certs
+      - /var/run/docker.sock:/var/run/docker.sock # So that Traefik can react to docker events
+      - letsencrypt:/letsencrypt # Volume to store TLS certs
       - ./basicauth:/basicauth # Mount this directory into containers root
     command:
       # General
@@ -90,6 +90,18 @@ services:
       - traefik.http.routers.myquartz_updater.rule=Host(`api.${HOST_DOMAIN}`) && PathPrefix(`/quartz_updater`)
       - traefik.http.services.myquartz_updater.loadbalancer.server.port=3000
 
+  wordpress:
+    image: wordpress
+    networks:
+      - proxy
+    volumes:
+      - wordpress:/var/www/html
+    labels:
+      # Setup routing to this service
+      - traefik.enable=true
+      - traefik.http.routers.wordpress.rule=Host(`wordpress.${HOST_DOMAIN}`)
+      - traefik.http.services.wordpress.loadbalancer.server.port=8080
+
 networks:
   proxy:
     name: proxy
@@ -97,3 +109,4 @@ networks:
 volumes:
   letsencrypt:
     name: letsencrypt
+  wordpress:
